@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  h2 {
+    margin-top: 20px;
+  }
+  
+  #clock {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  
+  #table-container {
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 40px;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+</style>
+</head>
+<body>
+
+<h2>Relógio de Bolsas Financeiras</h2>
+
+<div id="clock"></div>
+
+<div id="table-container">
+  <table>
+    <tr>
+      <th>País</th>
+      <th>Bolsa</th>
+      <th>Fuso Horário</th>
+      <th>Horário de Abertura</th>
+      <th>Horário de Fechamento</th>
+      <th>Tempo Restante</th>
+    </tr>
+    <tr>
+      <td>Estados Unidos</td>
+      <td>New York Stock Exchange (NYSE)</td>
+      <td>UTC-4/UTC-5</td>
+      <td><span id="nyse-open"></span></td>
+      <td><span id="nyse-close"></span></td>
+      <td><span id="nyse-countdown"></span></td>
+    </tr>
+    <!-- Adicione mais linhas conforme necessário -->
+  </table>
+</div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  const options = { timeZone: 'America/Sao_Paulo', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const timeString = now.toLocaleTimeString('en-US', options);
+  document.getElementById('clock').textContent = 'Horário de São Paulo: ' + timeString;
+}
+
+function updateMarketTimings(elementId, hours, minutes, countdownId) {
+  const now = new Date();
+  const targetTime = new Date(now);
+  targetTime.setUTCHours(hours);
+  targetTime.setUTCMinutes(minutes);
+  
+  const timeDiff = targetTime - now;
+  const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+  const minutesDiff = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  const timeString = hoursDiff.toString().padStart(2, '0') + ':' + minutesDiff.toString().padStart(2, '0');
+  document.getElementById(elementId).textContent = timeString;
+
+  // Calcula o tempo restante até o fechamento
+  const totalMilliseconds = timeDiff;
+  const remainingHours = Math.floor(totalMilliseconds / (1000 * 60 * 60));
+  const remainingMinutes = Math.floor((totalMilliseconds % (1000 * 60 * 60)) / (1000 * 60));
+  const remainingSeconds = Math.floor((totalMilliseconds % (1000 * 60)) / 1000);
+  const countdownString = remainingHours.toString().padStart(2, '0') + ':' +
+                          remainingMinutes.toString().padStart(2, '0') + ':' +
+                          remainingSeconds.toString().padStart(2, '0');
+  document.getElementById(countdownId).textContent = countdownString;
+}
+
+function updateAllMarketTimings() {
+  // Defina os horários de abertura e fechamento para cada bolsa (Exemplo)
+  updateMarketTimings('nyse-open', 14, 30, 'nyse-countdown'); // Abertura às 10:30 AM no horário de NY
+  // Adicione mais chamadas para outras bolsas aqui
+}
+
+// Atualiza o relógio, os horários de abertura/fechamento e o tempo restante a cada segundo
+setInterval(function() {
+  updateClock();
+  updateAllMarketTimings();
+}, 1000);
+
+// Chama as funções de atualização pela primeira vez para exibir os valores iniciais
+updateClock();
+updateAllMarketTimings();
+</script>
+
+</body>
+</html>
