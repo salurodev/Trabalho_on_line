@@ -1,0 +1,17 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    text-decoration: none;
+}
+
+.bannersPNG {
+    text-align: center;
+    padding: 10px;
+}
+
+img {
+    width: 80%;
+    border-radius: 10px;
+}
